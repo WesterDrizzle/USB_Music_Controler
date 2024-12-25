@@ -1,0 +1,12 @@
+.vscode
+Obj/** 
+DebugConfig/** 
+RTE
+*.uvoptx
+*.uvguix.*
+*.exe
+*.bat
+*.py
+*.csv
+*.xlsx
+*.txt
