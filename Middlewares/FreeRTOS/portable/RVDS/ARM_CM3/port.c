@@ -74,6 +74,7 @@
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
+#include "usart.h"
 #include <stdint.h>
 #ifndef configKERNEL_INTERRUPT_PRIORITY
 	#define configKERNEL_INTERRUPT_PRIORITY 255
@@ -453,7 +454,10 @@ void vPortEnterCritical(void)
 	assert function also uses a critical section. */
 	if (uxCriticalNesting == 1)
 	{
-		//printf("%s\r\n", interruptNames[getActiveInterrupt()]);
+//		uint8_t temp = getActiveInterrupt();
+//		if(temp!=0){
+//			printf("%s\r\n", interruptNames[temp]);
+//		}
 		configASSERT((portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK) == 0);
 	}
 }

@@ -59,8 +59,10 @@ void EP1_IN_Callback(void)
 {
   /* Set the transfer complete token to inform upper layer that the current
   transfer has been complete */
+	BaseType_t xHigherPriorityTaskWoken;
+	xSemaphoreGiveFromISR(USBTransferCompleted,&xHigherPriorityTaskWoken);
+	portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
 
-  xSemaphoreGive(USBTransferCompleted);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
