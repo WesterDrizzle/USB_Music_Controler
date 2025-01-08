@@ -76,7 +76,7 @@ RESULT PowerOn(void)
 
   /*** CNTR_PWDN = 0 ***/
   wRegVal = CNTR_FRES;
-  _SetCNTR(wRegVal); // 寮哄埗澶嶄綅
+  _SetCNTR(wRegVal); // 瀵搫鍩楁径宥勭秴
 
   /* The following sequence is recommended:
     1- FRES = 0
@@ -84,7 +84,7 @@ RESULT PowerOn(void)
     3- clear ISTR register */
 
   /*** CNTR_FRES = 0 ***/
-  wInterrupt_Mask = 0; // 娓呯┖CNTR
+  wInterrupt_Mask = 0; // 濞撳懐鈹朇NTR
 
   _SetCNTR(wInterrupt_Mask);
 
@@ -96,7 +96,7 @@ RESULT PowerOn(void)
   SetISTR(0);
 
   /*** Set interrupt mask ***/
-  wInterrupt_Mask = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; // 浣胯兘涓柇
+  wInterrupt_Mask = CNTR_RESETM | CNTR_SUSPM | CNTR_WKUPM; // 娴ｈ儻鍏樻稉顓熸焽
   _SetCNTR(wInterrupt_Mask);
 
   return USB_SUCCESS;

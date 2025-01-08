@@ -57,7 +57,6 @@ int main()
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 	SysTick_Init(72);
 	USART2_Init(9600);
-	printf("USART2_Init OK\r\n");
 	Set_System();
 	Set_USBClock();
 	TP_Init();
@@ -82,7 +81,7 @@ int main()
 
 	while (1)
 	{
-		vTaskDelay(pdMS_TO_TICKS(5));
+		assert_param(0);
 	}
 }
 void start_task(void *pvParameters)
@@ -120,7 +119,7 @@ QueueHandle_t USBTransferCompleted;
 MyMusicPlayer mMusicPlayer = {0};
 void MusicPlayer_task(void *pvParameters)
 {
-	//BaseType_t xHigherPriorityTaskWoken;
+	// BaseType_t xHigherPriorityTaskWoken;
 	my_player Player = {0};
 	uint32_t Player_Buffer = 0;
 	u16 remain;
@@ -141,7 +140,7 @@ void MusicPlayer_task(void *pvParameters)
 					remain = (remain * 50) / 100;
 					while (remain--)
 					{
-						xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+						xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 						USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 						SetEPTxValid(ENDP1);
 					}
@@ -152,7 +151,7 @@ void MusicPlayer_task(void *pvParameters)
 					remain = mMusicPlayer.MusicPlayerConfig.SliderChangedValue;
 					while (remain--) // 50
 					{
-						xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+						xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 						USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 						SetEPTxValid(ENDP1);
 					}
@@ -167,7 +166,7 @@ void MusicPlayer_task(void *pvParameters)
 					remain = (remain * 10) / 100;
 					while (remain--)
 					{
-						xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+						xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 						USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 						SetEPTxValid(ENDP1);
 					}
@@ -179,7 +178,7 @@ void MusicPlayer_task(void *pvParameters)
 					remain = (remain * 10) / 100;
 					while (remain--)
 					{
-						xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+						xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 						USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 						SetEPTxValid(ENDP1);
 					}
@@ -211,13 +210,13 @@ void MusicPlayer_task(void *pvParameters)
 				{
 					Player.btns.Next = 1;
 				}
-				xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+				xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 				USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 				SetEPTxValid(ENDP1);
 			}
 			Player.value = 0;
 			mMusicPlayer.MusicPlayerValue = 0;
-			xSemaphoreTake(USBTransferCompleted,portMAX_DELAY);
+			xSemaphoreTake(USBTransferCompleted, portMAX_DELAY);
 			USB_SIL_Write(EP1_IN, (uint8_t *)&Player.value, 2);
 			SetEPTxValid(ENDP1);
 		}
@@ -228,9 +227,9 @@ void Lvgl_update_task(void *pvParameters)
 {
 	while (1)
 	{
-		//mutex_lock(lvgl_mutex);
+		mutex_lock(lvgl_mutex);
 		lv_timer_handler();
-		//mutex_unlock(lvgl_mutex);
+		mutex_unlock(lvgl_mutex);
 		vTaskDelay(pdMS_TO_TICKS(5));
 	}
 }
@@ -246,17 +245,10 @@ void Detect_task(void *pvParameters)
 	{
 		LED2 = !LED2;
 #if DEBUG
-		uint32_t MusicPlayerTaskStack = uxTaskGetStackHighWaterMark(MusicPlayerTask_Handler);
-		uint32_t LvglUpdateTaskStack = uxTaskGetStackHighWaterMark(LvglUpdateTask_Handler);
-		sprintf(MusicStackStr, "MusicStack %d", MusicPlayerTaskStack);
-		sprintf(LvglUpdateStackStr, "UpdateStack %d", LvglUpdateTaskStack);
-		LCD_ShowString(0, 0, 12 * strlen(MusicStackStr), 12, 12, (u8 *)MusicStackStr);
-		LCD_ShowString(0, 12, 12 * strlen(LvglUpdateStackStr), 12, 12, (u8 *)LvglUpdateStackStr);
 		vTaskList(buffer);
 		printf("%s\r\n", buffer);
 #endif
-			printf("Detect_task OK\r\n");
 
-		vTaskDelay(pdMS_TO_TICKS(500));
+		vTaskDelay(pdMS_TO_TICKS(1000));
 	}
 }
